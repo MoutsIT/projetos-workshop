@@ -76,9 +76,18 @@ $method = $_SERVER['REQUEST_METHOD'];
 if ($method == 'POST') {
     $input = json_decode(file_get_contents("php://input"), true);
 
+    // Verifica se é uma requisição de validação de CPF
+    if (isset($input['cpf'])) {
+        $resultado = validarCPF($input['cpf']);
+        http_response_code(200);
+        echo json_encode($resultado);
+        exit;
+    }
+
+    // Verifica se é uma requisição de cálculo
     if (!isset($input['num1']) || !isset($input['num2']) || !isset($input['operation'])) {
         http_response_code(400);
-        echo json_encode(["error" => "Parâmetros inválidos. Envie num1, num2 e operation."]);
+        echo json_encode(["error" => "Parâmetros inválidos. Envie num1, num2 e operation ou cpf para validação."]);
         exit;
     }
 
