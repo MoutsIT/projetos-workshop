@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+    environment:
+      - APACHE_DOCUMENT_ROOT=/var/www/html
+
+  test:
+    build: .
+    volumes:
+      - .:/var/www/html
+      - ./vendor:/var/www/html/vendor
+      - ./coverage:/var/www/html/coverage
+    command: bash -c "composer install && XDEBUG_MODE=coverage ./vendor/bin/phpunit --coverage-html coverage"
